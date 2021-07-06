@@ -10,7 +10,8 @@
   "require": {
     "laravel/framework": "^6.2|^7|^8",
     "guzzlehttp/guzzle": "^7.3",
-    "zbanx/laravel-kit": "^0.1.5"
+    "zbanx/laravel-kit": "^0.1",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5"
