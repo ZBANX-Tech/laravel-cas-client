@@ -1,0 +1,41 @@
+{
+  "name": "zbanx/laravel-cas-client",
+  "description": "Zbanx CAS Client",
+  "authors": [
+    {
+      "name": "eiixy",
+      "email": "eiixy@zbanx.com"
+    }
+  ],
+  "require": {
+    "laravel/framework": "^6.2|^7|^8",
+    "guzzlehttp/guzzle": "^7.3",
+    "zbanx/laravel-kit": "^0.1.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zbanx\\CasClient\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Zbanx\\CasClient\\CasClientServiceProvider"
+      ]
+    }
+  },
+  "repositories": {
+    "laravel-kit": {
+      "type": "composer",
+      "url": "https://zbanx-composer.pkg.coding.net/zbanx-kit/laravel-kit"
+    }
+  }
+}
