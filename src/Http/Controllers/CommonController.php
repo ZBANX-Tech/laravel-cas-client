@@ -5,6 +5,7 @@ namespace Zbanx\CasClient\Http\Controllers;
 
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Arr;
 use Zbanx\Kit\Common\JsonResponse;
 
 class CommonController extends Controller
@@ -14,12 +15,12 @@ class CommonController extends Controller
     public function routes(): \Illuminate\Http\JsonResponse
     {
         $routes = app('router')->getRoutes();
-        $middleware = config('cas.middleware','cas.permission');
+        $middleware = config('cas.middleware', 'cas.permission');
         $list = [];
         foreach ($routes as $route) {
             if (key_exists('middleware', $route->action)) {
                 $middlewares = $route->action['middleware'];
-                if (in_array($middleware, $middlewares))
+                if (in_array($middleware, Arr::wrap($middlewares)))
                     $list[] = [
                         'uri' => $route->uri,
                         'methods' => $route->methods,

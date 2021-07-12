@@ -17,7 +17,21 @@ php artisan vendor:publish --provider="Zbanx\CasClient\CasClientServiceProvider"
 ```
 
 3. 用户模型添加 `\Zbanx\CasClient\Traits\CasUser` 特性
+```
+class User extends Authenticatable implements JWTSubject
+{
+    use Notifiable;
+    use SoftDeletes;
+    use CasUser;
+    
+    // ...
+}
+```
 
+4. 为需要管理权限的接口增加 `cas.permission` 中间件
+```
+Route::post('/download', 'ProjectAnalysisController@download')->name('download')->middleware('cas.permission');
+```
 ## 接口路由
 
 | Method | Uri | Desc |
