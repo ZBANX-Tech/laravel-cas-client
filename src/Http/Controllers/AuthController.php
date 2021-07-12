@@ -37,7 +37,8 @@ class AuthController extends Controller
 
         $token = auth($auth['guard'])->login($user);
 
-        CachePermission::setPermissions($response['data']['account_id'],$response['data']['permissions']);
+        CachePermission::setPermissions($response['data']['account_id'], $response['data']['permissions']);
+        CachePermission::setUserTicket($response['data']['account_id'], $ticket);
 
         return $this->success([
             'user' => $user,
@@ -50,7 +51,18 @@ class AuthController extends Controller
     public function logout(): \Illuminate\Http\JsonResponse
     {
         $guard = config('cas.auth.guard');
+        $ticket = CachePermission::getUserTicket(auth($guard)->id());
         auth($guard)->logout();
+
+        try {
+            $client = new HttpClient();
+            $client->request('DELETE', "/api/tickets/{$ticket}");
+        } catch (GuzzleException $exception) {
+            return $this->error($exception->getMessage(), -2);
+        } catch (CasClientException $exception) {
+            return $this->error($exception->getMessage(), -3);
+        }
+
         return $this->success();
     }
 }
