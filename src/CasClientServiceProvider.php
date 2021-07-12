@@ -5,6 +5,7 @@ namespace Zbanx\CasClient;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Zbanx\CasClient\Http\Middleware\CasPermission;
 
 
 class CasClientServiceProvider extends ServiceProvider
@@ -14,6 +15,7 @@ class CasClientServiceProvider extends ServiceProvider
     {
         $this->registerPublishing();
         $this->registerRoutes();
+        $this->aliasMiddleware();
     }
 
 
@@ -38,4 +40,22 @@ class CasClientServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Alias the middleware.
+     *
+     * @return void
+     */
+    protected function aliasMiddleware()
+    {
+        $router = $this->app['router'];
+
+        $method = method_exists($router, 'aliasMiddleware') ? 'aliasMiddleware' : 'middleware';
+
+        $middlewareAliases = [
+            'cas.permission' => CasPermission::class,
+        ];
+        foreach ($middlewareAliases as $alias => $middleware) {
+            $router->$method($alias, $middleware);
+        }
+    }
 }

@@ -4,33 +4,19 @@
 
 ## 快速开始
 
-1. 设置仓库地址
-```
-"repositories": {
-    "laravel-kit": {
-      "type": "composer",
-      "url": "https://zbanx-composer.pkg.coding.net/zbanx-kit/laravel-kit"
-    },
-    "laravel-cas": {
-      "type": "composer",
-      "url": "https://zbanx-composer.pkg.coding.net/zbanx-kit/laravel-cas"
-    }
-  }
-```
-
-2. 使用 composer 安装
+1. 使用 composer 安装
 
  ```
  composer require zbanx/laravel-cas-client
  ```
 
-3. 发布配置文件
+2. 发布配置文件
 
 ```
 php artisan vendor:publish --provider="Zbanx\CasClient\CasClientServiceProvider"
 ```
 
-4. 用户模型添加 `\Zbanx\CasClient\Traits\CasUser` 特性
+3. 用户模型添加 `\Zbanx\CasClient\Traits\CasUser` 特性
 
 ## 接口路由
 

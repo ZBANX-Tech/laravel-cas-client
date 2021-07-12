@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Zbanx\CasClient\Exceptions\CasClientException;
+use Zbanx\CasClient\Uilts\CachePermission;
 use Zbanx\CasClient\Uilts\HttpClient;
 use Zbanx\Kit\Common\JsonResponse;
 
@@ -31,16 +32,16 @@ class AuthController extends Controller
             return $this->error($response['message'], -1);
         }
 
-        $guard = config('cas.guard');
-        $token = auth($guard)->attempt([
-            'id' => $response['account_id']
-        ]);
+        $auth = config('cas.auth');
+        $user = $auth['model']::query()->find($response['data']['account_id']);
 
-        $user = auth($guard)->user();
+        $token = auth($auth['guard'])->login($user);
+
+        CachePermission::setPermissions($response['data']['account_id'],$response['data']['permissions']);
 
         return $this->success([
             'user' => $user,
-            'permissions' => $response['permissions'],
+            'permissions' => $response['data']['permissions'],
             'token' => $token,
             'ttl' => config('cas.ttl')
         ]);
@@ -48,7 +49,7 @@ class AuthController extends Controller
 
     public function logout(): \Illuminate\Http\JsonResponse
     {
-        $guard = config('cas.guard');
+        $guard = config('cas.auth.guard');
         auth($guard)->logout();
         return $this->success();
     }
