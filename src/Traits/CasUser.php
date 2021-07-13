@@ -5,7 +5,7 @@ namespace Zbanx\CasClient\Traits;
 
 
 use Illuminate\Support\Str;
-use Zbanx\CasClient\Uilts\CachePermission;
+use Zbanx\CasClient\Uilts\CasCache;
 
 trait CasUser
 {
@@ -15,7 +15,7 @@ trait CasUser
      */
     public function hasPermission($permission): bool
     {
-        $permissions = CachePermission::getPermissions($this->id);
+        $permissions = CasCache::getPermissions($this->id);
         foreach ($permissions['keywords'] as $keyword) {
             if (Str::is($keyword, $permission)) {
                 return true;

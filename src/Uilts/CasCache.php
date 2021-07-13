@@ -6,9 +6,9 @@ namespace Zbanx\CasClient\Uilts;
 
 use Illuminate\Support\Facades\Cache;
 
-class CachePermission
+class CasCache
 {
-    public static function setPermissions($user_id, $data): bool
+    public static function setPermissions($user_id, $data)
     {
         $ttl = config('cas.ttl', 7200);
         Cache::put(self::getPermissionKey($user_id), $data, $ttl);
@@ -23,13 +23,18 @@ class CachePermission
         ]);
     }
 
+    public static function delPermissions($user_id)
+    {
+        Cache::forget(self::getPermissionKey($user_id));
+    }
+
     public static function setUserTicket($user_id, $ticket)
     {
         $ttl = config('cas.ttl', 7200);
         Cache::put(self::getTicketKey($user_id), $ticket, $ttl);
     }
 
-    public static function getUserTicket($user_id, $ticket)
+    public static function getUserTicket($user_id)
     {
         return Cache::get(self::getPermissionKey($user_id));
     }

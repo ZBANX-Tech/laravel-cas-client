@@ -7,7 +7,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Zbanx\CasClient\Exceptions\CasClientException;
-use Zbanx\CasClient\Uilts\CachePermission;
+use Zbanx\CasClient\Uilts\CasCache;
 use Zbanx\CasClient\Uilts\HttpClient;
 use Zbanx\Kit\Common\JsonResponse;
 
@@ -37,8 +37,8 @@ class AuthController extends Controller
 
         $token = auth($auth['guard'])->login($user);
 
-        CachePermission::setPermissions($response['data']['account_id'], $response['data']['permissions']);
-        CachePermission::setUserTicket($response['data']['account_id'], $ticket);
+        CasCache::setPermissions($response['data']['account_id'], $response['data']['permissions']);
+        CasCache::setUserTicket($response['data']['account_id'], $ticket);
 
         return $this->success([
             'user' => $user,
@@ -51,8 +51,10 @@ class AuthController extends Controller
     public function logout(): \Illuminate\Http\JsonResponse
     {
         $guard = config('cas.auth.guard');
-        $ticket = CachePermission::getUserTicket(auth($guard)->id());
+        $user_id = auth($guard)->id();
+        $ticket = CasCache::getUserTicket($user_id);
         auth($guard)->logout();
+        CasCache::delPermissions($user_id);
 
         try {
             $client = new HttpClient();
