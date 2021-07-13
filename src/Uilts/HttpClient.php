@@ -8,7 +8,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 use Zbanx\CasClient\Exceptions\CasClientException;
-use Zbanx\Kit\Utils\Signature;
 
 class HttpClient
 {
@@ -20,16 +19,16 @@ class HttpClient
         $this->client = new Client([
             'base_uri' => config('cas.server')
         ]);
-        $this->signature = new Signature(config('cas.app_id'), config('cas.app_secret'));
+        $this->signature = config('cas.app_id') . ':' . config('cas.app_secret');
     }
 
     /**
      * @throws GuzzleException
      * @throws CasClientException
      */
-    public function request($method, $uri, $params = [], $options = [])
+    public function request($method, $uri, $options = [])
     {
-        $uri .= $this->signature->sign($params);
+        $options['headers'] = array_merge($options['headers'], ['X-Signature' => $this->signature]);
         $response = $this->client->request($method, $uri, $options);
 
         // 记录请求日志
