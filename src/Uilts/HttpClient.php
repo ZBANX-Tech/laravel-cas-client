@@ -28,7 +28,7 @@ class HttpClient
      */
     public function request($method, $uri, $options = [])
     {
-        $options['headers'] = array_merge($options['headers'], ['X-Signature' => $this->signature]);
+        $options['headers'] = array_merge($options['headers'] ?? [], ['X-Signature' => $this->signature]);
         $response = $this->client->request($method, $uri, $options);
 
         // 记录请求日志
