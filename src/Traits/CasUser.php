@@ -32,4 +32,12 @@ trait CasUser
     {
         return true;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPermissions()
+    {
+        return CasCache::getPermissions($this->id);
+    }
 }
