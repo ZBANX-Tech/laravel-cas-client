@@ -6,6 +6,7 @@ namespace Zbanx\CasClient\Http\Controllers;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Zbanx\CasClient\Account;
 use Zbanx\CasClient\Exceptions\CasClientException;
 use Zbanx\CasClient\Uilts\CasCache;
 use Zbanx\CasClient\Uilts\HttpClient;
@@ -33,7 +34,14 @@ class AuthController extends Controller
         }
 
         $auth = config('cas.auth');
+
         $user = $auth['model']::query()->find($response['data']['account_id']);
+
+        if (!$user) {
+            // 账号不存在则创建新账号
+            $account = new Account($response['data']['account']);
+            $user = $auth['model']::createAccount($account);
+        }
 
         $token = auth($auth['guard'])->login($user);
 

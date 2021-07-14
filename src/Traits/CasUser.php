@@ -5,6 +5,7 @@ namespace Zbanx\CasClient\Traits;
 
 
 use Illuminate\Support\Str;
+use Zbanx\CasClient\Account;
 use Zbanx\CasClient\Uilts\CasCache;
 
 trait CasUser
@@ -40,4 +41,11 @@ trait CasUser
     {
         return CasCache::getPermissions($this->id);
     }
+
+    /**
+     * 实现创建账号方法
+     * @param Account $account
+     * @return mixed
+     */
+    abstract public static function createAccount(Account $account);
 }
