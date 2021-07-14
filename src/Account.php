@@ -16,7 +16,7 @@ class Account
 
     public function __construct($account)
     {
-        $this->account_id = $account['account_id'];
+        $this->account_id = $account['id'];
         $this->username = $account['username'];
         $this->nickname = $account['nickname'];
         $this->email = $account['email'];

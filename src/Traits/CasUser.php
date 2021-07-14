@@ -4,6 +4,8 @@
 namespace Zbanx\CasClient\Traits;
 
 
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Str;
 use Zbanx\CasClient\Account;
 use Zbanx\CasClient\Uilts\CasCache;
@@ -45,7 +47,7 @@ trait CasUser
     /**
      * 实现创建账号方法
      * @param Account $account
-     * @return mixed
+     * @return Authenticatable
      */
-    abstract public static function createAccount(Account $account);
+    abstract public static function createAccount(Account $account): Authenticatable;
 }
