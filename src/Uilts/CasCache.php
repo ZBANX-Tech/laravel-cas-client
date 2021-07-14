@@ -36,7 +36,7 @@ class CasCache
 
     public static function getUserTicket($user_id)
     {
-        return Cache::get(self::getPermissionKey($user_id));
+        return Cache::get(self::getTicketKey($user_id));
     }
 
     private static function getPermissionKey($user_id): string
