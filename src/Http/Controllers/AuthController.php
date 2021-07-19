@@ -67,10 +67,8 @@ class AuthController extends Controller
         try {
             $client = new HttpClient();
             $client->request('DELETE', "/api/tickets/{$ticket}");
-        } catch (GuzzleException $exception) {
-            return $this->error($exception->getMessage(), -2);
-        } catch (CasClientException $exception) {
-            return $this->error($exception->getMessage(), -3);
+        } catch (CasClientException | GuzzleException $e) {
+
         }
 
         return $this->success();
