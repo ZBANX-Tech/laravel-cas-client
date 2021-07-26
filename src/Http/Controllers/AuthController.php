@@ -89,7 +89,7 @@ class AuthController extends Controller
     {
         try {
             $client = new HttpClient();
-            $response = $client->request('POST', "/api/login", [
+            $response = $client->request('POST', "/api/platform/login", [
                 'body' => $data
             ]);
         } catch (GuzzleException $exception) {
