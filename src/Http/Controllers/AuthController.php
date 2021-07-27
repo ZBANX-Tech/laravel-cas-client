@@ -23,6 +23,11 @@ class AuthController extends Controller
         } elseif ($request->filled('account') && $request->filled('password')) {
             $response = $this->loginWithPassword($request->all(['account', 'password']));
         }
+
+        if ($response instanceof \Illuminate\Http\JsonResponse){
+            return $response;
+        }
+
         if ($response['code'] != 0) {
             return $this->error($response['message'], -1);
         }
@@ -90,7 +95,7 @@ class AuthController extends Controller
         try {
             $client = new HttpClient();
             $response = $client->request('POST', "/api/platform/login", [
-                'body' => $data
+                'form_params' => $data
             ]);
         } catch (GuzzleException $exception) {
             return $this->error($exception->getMessage(), -2);
