@@ -24,7 +24,7 @@ class AuthController extends Controller
             $response = $this->loginWithPassword($request->all(['account', 'password']));
         }
 
-        if ($response instanceof \Illuminate\Http\JsonResponse){
+        if ($response instanceof \Illuminate\Http\JsonResponse) {
             return $response;
         }
 
@@ -62,7 +62,6 @@ class AuthController extends Controller
         $user_id = auth($guard)->id();
         $ticket = CasCache::getUserTicket($user_id);
         auth($guard)->logout();
-        CasCache::delPermissions($user_id);
 
         if (!empty($ticket)) {
             try {
@@ -74,6 +73,24 @@ class AuthController extends Controller
         }
 
         return $this->success();
+    }
+
+    public function refresh(): \Illuminate\Http\JsonResponse
+    {
+        $guard = config('cas.auth.guard');
+        $token = auth($guard)->refresh();
+        $user = auth($guard)->user();
+        $permissions = CasCache::getPermissions($user->id);
+
+        CasCache::setUserTicketTTL($user->id);
+        CasCache::setPermissionsTTL($user->id);
+
+        return $this->success([
+            'user' => $user,
+            'permissions' => $permissions,
+            'token' => $token,
+            'ttl' => config('cas.ttl')
+        ]);
     }
 
     private function loginWithTicket($ticket)

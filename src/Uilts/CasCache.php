@@ -48,4 +48,18 @@ class CasCache
     {
         return config('cas.cache.prefix') . '_tickets:' . $user_id;
     }
+
+    public static function setUserTicketTTL($user_id)
+    {
+        $ttl = config('cas.ttl', 7200);
+        $ticket = self::getUserTicket($user_id);
+        Cache::put(self::getTicketKey($user_id), $ticket, $ttl);
+    }
+
+    public static function setPermissionsTTL($user_id)
+    {
+        $ttl = config('cas.ttl', 7200);
+        $permissions = self::getPermissions($user_id);
+        Cache::put(self::getPermissionKey($user_id), $permissions, $ttl);
+    }
 }
