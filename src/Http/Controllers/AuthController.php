@@ -78,19 +78,22 @@ class AuthController extends Controller
     public function refresh(): \Illuminate\Http\JsonResponse
     {
         $guard = config('cas.auth.guard');
-        $token = auth($guard)->refresh();
         $user = auth($guard)->user();
-        $permissions = CasCache::getPermissions($user->id);
+        if ($user) {
+            $token = auth($guard)->refresh();
+            $permissions = CasCache::getPermissions($user->id);
 
-        CasCache::setUserTicketTTL($user->id);
-        CasCache::setPermissionsTTL($user->id);
+            CasCache::setUserTicketTTL($user->id);
+            CasCache::setPermissionsTTL($user->id);
 
-        return $this->success([
-            'user' => $user,
-            'permissions' => $permissions,
-            'token' => $token,
-            'ttl' => config('cas.ttl')
-        ]);
+            return $this->success([
+                'user' => $user,
+                'permissions' => $permissions,
+                'token' => $token,
+                'ttl' => config('cas.ttl')
+            ]);
+        }
+        return $this->error('token invalid');
     }
 
     private function loginWithTicket($ticket)
