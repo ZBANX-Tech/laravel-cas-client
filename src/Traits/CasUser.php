@@ -4,7 +4,7 @@
 namespace Zbanx\CasClient\Traits;
 
 
-use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 use Zbanx\CasClient\Account;
 use Zbanx\CasClient\Uilts\CasCache;
